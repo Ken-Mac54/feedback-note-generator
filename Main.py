@@ -1,20 +1,21 @@
 import streamlit as st
-import OpenAI
+import openai
 
 # --- Streamlit App Config ---
 st.set_page_config(page_title="Feedback Note Generator", layout="wide")
-st.title("📋 Feedback Note Generator")
+st.title("Feedback Note Generator")
 st.markdown("Answer the following questions to generate a structured feedback note. This tool works for supervisors or individuals.")
 
 # --- OpenAI Client Setup ---
 def get_openai_client():
     try:
         api_key = st.secrets["OPENAI_API_KEY"]
+        openai.api_key = api_key
+        return openai
     except KeyError:
         st.warning("Missing OpenAI API key. Please set it in Streamlit Secrets as 'OPENAI_API_KEY'.")
         return None
-    return OpenAI(api_key=api_key)
-
+    
 # --- Input Form ---
 with st.form("feedback_form"):
     rank = st.selectbox("What is the member's rank?", ["Cpl", "MCpl", "Sgt", "WO"], index=1)
@@ -30,7 +31,7 @@ with st.form("feedback_form"):
 
 # --- AI Prompt Formatting and Processing ---
 if submitted:
-    openai.api_key = api_key
+    client = get_openai_client()
     if not client:
         st.stop()
 
@@ -62,11 +63,13 @@ Write a 2–3 sentence summary of the measurable or strategic benefit to the uni
         response = openai.ChatCompletion.create(
     model="gpt-4",
     messages=[
-        {"role": "system", "content": "You are a helpful assistant that writes structured military feedback notes using event descriptions and prompting questions."},
+        {"role": "system", "content": "You are a helpful assistant that writes structured military feedback notes using event descriptions."},
         {"role": "user", "content": f"{combined_input}"}
     ]
 )
 
 ai_output = response['choices'][0]['message']['content']
+        st.markdown("🧾 Generated Feedback Note"
+        st.text_area("Output", value=ai_output, height=400)
     except Exception as e:
-        st.error(f"Failed to connect to OpenAI API: {e}")
+       st.error(f"❌ Failed to generate feedback note: {e}")
