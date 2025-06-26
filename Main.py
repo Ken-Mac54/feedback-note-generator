@@ -30,7 +30,7 @@ with st.form("feedback_form"):
 
 # --- AI Prompt Formatting and Processing ---
 if submitted:
-    client = get_openai_client()
+    openai.api_key = api_key
     if not client:
         st.stop()
 
