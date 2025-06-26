@@ -60,14 +60,15 @@ Write a 2–3 sentence summary of the measurable or strategic benefit to the uni
 """
 
     try:
+        openai.ai_key = api_key
         response = openai.ChatCompletion.create(
-    model="gpt-4",
-    messages=[
-        {"role": "system", "content": "You are a helpful assistant that writes structured military feedback notes using event descriptions."},
-        {"role": "user", "content": f"{combined_input}"}
-    ]
-)
-ai_output = response['choices'][0]['message']['content']
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant that writes structured military feedback notes using event descriptions."},
+                {"role": "user", "content": f"{combined_input}"}
+            ]
+        )
+        ai_output = response['choices'][0]['message']['content']
         st.markdown("🧾 Generated Feedback Note"
         st.text_area("Output", value=ai_output, height=400)
     except Exception as e:
