@@ -34,7 +34,7 @@ if submitted:
     if not client:
         st.stop()
 
-    event_summary = f"""
+    prompt = f"""
 Rank: {rank}
 Role: {role}
 
@@ -60,8 +60,8 @@ Write a 2–3 sentence summary of the measurable or strategic benefit to the uni
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4",
-            messages=[{"role": "user", "content": event_summary}],
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}],
             temperature=0.7
         )
         generated_note = response.choices[0].message.content
