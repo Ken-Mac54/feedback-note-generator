@@ -1,83 +1,88 @@
 import streamlit as st
-import openai
 import pandas as pd
+import openai
 import os
 
-# --- App Config ---
+# --- Streamlit App Config ---
 st.set_page_config(page_title="Feedback Note Generator", layout="wide")
 st.title("📋 Feedback Note Generator")
-st.markdown("Answer the following questions to generate a structured feedback note.")
+st.markdown("Fill out the form below to generate a structured feedback note. Works for both supervisors and individuals.")
 
-# --- Load Definitions from Excel ---
-def load_definitions(path):
+# --- Load Competency Definitions from Excel ---
+@st.cache_data
+def load_definitions():
     try:
-        df = pd.read_excel(path)
-        definitions = {}
-        for _, row in df.iterrows():
-            competency = str(row.get("Competency")).strip()
-            definition = str(row.get("Definition")).strip()
-            if competency and definition:
-                definitions[competency] = definition
-        return definitions
+        df = pd.read_excel("PAR Writing Guide (1).xlsx")
+        return df
     except Exception as e:
-        st.error(f"Could not load definitions: {e}")
-        return {}
+        st.error(f"Error loading competency definitions: {e}")
+        return pd.DataFrame()
 
-definitions_path = "/mnt/data/PAR Writing Guide (1).xlsx"
-competency_definitions = load_definitions(definitions_path)
+definitions_df = load_definitions()
 
-# --- OpenAI Client ---
+# --- OpenAI Client Setup ---
 def get_openai_client():
     try:
         api_key = st.secrets["OPENAI_API_KEY"]
         openai.api_key = api_key
-        return True
+        return openai
     except KeyError:
-        st.warning("OpenAI API key not found in secrets.")
-        return False
+        st.warning("Missing OpenAI API key. Please set it in Streamlit Secrets as 'OPENAI_API_KEY'.")
+        return None
 
 # --- Input Form ---
 with st.form("feedback_form"):
-    rank = st.selectbox("Rank", ["Cpl", "MCpl", "Sgt", "WO"], index=1)
-    role = st.text_input("Role or position")
-    q1 = st.text_area("1. What task or project was completed?")
-    q2 = st.text_area("2. What problem, need, or opportunity was being addressed?")
-    q3 = st.text_area("3. What steps were taken to achieve the result?")
-    q4 = st.text_area("4. Who else was impacted or involved?")
-    q5 = st.text_area("5. What was the result or benefit to the organization?")
+    rank = st.selectbox("Select the member's rank:", ["Cpl", "MCpl", "Sgt", "WO"], index=1)
+
+    event = st.text_area("1. Event Description", placeholder="What was the task, project, or situation?")
+    who = st.text_area("2. Who", placeholder="Who was this task completed for, and who did it affect?")
+    what = st.text_area("3. What", placeholder="What actions were taken, and what was the impact?")
+    where = st.text_area("4. Where", placeholder="Where was this completed (unit, location, platform, etc.)?")
+    why = st.text_area("5. Why", placeholder="Why was this task or project important? What need or goal did it support?")
+    how = st.text_area("6. How", placeholder="How was the task completed? What tools, methods, or problem-solving approaches were used?")
+    outcome = st.text_area("7. Outcome", placeholder="What changed as a result of these actions? What benefit was achieved for the team, unit, or organization?")
+
     submitted = st.form_submit_button("Generate Feedback Note")
 
-# --- Prompt to OpenAI ---
-if submitted and get_openai_client():
-    definition_block = "\n".join([f"{k}: {v}" for k, v in competency_definitions.items()])
+# --- Feedback Note Generation ---
+if submitted:
+    client = get_openai_client()
+    if not client:
+        st.stop()
+
     prompt = f"""
-You are writing a formal military feedback note for a {rank} in the role of {role}.
+Rank: {rank}
 
-Below are competency definitions:
-{definition_block}
+Event Description: {event}
+Who: {who}
+What: {what}
+Where: {where}
+Why: {why}
+How: {how}
+Outcome: {outcome}
 
-Task: {q1}
-Context: {q2}
-Actions: {q3}
-Stakeholders: {q4}
-Outcome: {q5}
+Using the following structure and tone, generate a formal military-style feedback note starting with 3–5 competencies and ratings, followed by an Event Description and an Outcome section. Use the scoring format like:
 
-Generate a feedback note with the following format:
-1. Start with 3–5 relevant competencies and performance scores (E, HE, etc.), referencing the competency definitions.
-2. Provide a 1–2 paragraph Event Description using the user's input.
-3. Finish with an Outcome section summarizing the strategic or measurable benefit.
-    """
+Event Description:
+Initiative (HE) – [short rationale]
+Communication (E) – [short rationale]
+
+Then write a 1–2 paragraph description of the event with the details provided above.
+
+Outcome:
+Write a 2–3 sentence summary of the measurable or strategic benefit to the unit or organization.
+"""
 
     try:
         response = openai.ChatCompletion.create(
             model="gpt-4",
             messages=[
-                {"role": "system", "content": "You are a helpful assistant that writes structured military feedback notes."},
+                {"role": "system", "content": "You are a helpful assistant that writes structured military feedback notes using input based on a defined prompting structure."},
                 {"role": "user", "content": prompt}
             ]
         )
-        ai_output = response["choices"][0]["message"]["content"]
-        st.markdown("### ✍️ Feedback Note Output")
-        st.text(ai_output)
+        ai_output = response['choices'][0]['message']['content']
+        st.subheader("📄 Generated Feedback Note")
+        st.markdown(ai_output)
     except Exception as e:
-        st.error(f"OpenAI call failed: {e}")
+        st.error(f"Failed to connect to OpenAI API: {e}")
