@@ -1,5 +1,5 @@
 import streamlit as st
-from openai import OpenAI
+import OpenAI
 
 # --- Streamlit App Config ---
 st.set_page_config(page_title="Feedback Note Generator", layout="wide")
