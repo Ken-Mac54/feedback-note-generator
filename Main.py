@@ -59,13 +59,14 @@ Write a 2–3 sentence summary of the measurable or strategic benefit to the uni
 """
 
     try:
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.7
-        )
-        generated_note = response.choices[0].message.content
-        st.markdown("### ✅ Feedback Note")
-        st.text_area("Generated Note", value=generated_note, height=400)
+        response = openai.ChatCompletion.create(
+    model="gpt-4",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant that writes structured military feedback notes using event descriptions and prompting questions."},
+        {"role": "user", "content": f"{combined_input}"}
+    ]
+)
+
+ai_output = response['choices'][0]['message']['content']
     except Exception as e:
         st.error(f"Failed to connect to OpenAI API: {e}")
