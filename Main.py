@@ -67,7 +67,6 @@ Write a 2–3 sentence summary of the measurable or strategic benefit to the uni
         {"role": "user", "content": f"{combined_input}"}
     ]
 )
-
 ai_output = response['choices'][0]['message']['content']
         st.markdown("🧾 Generated Feedback Note"
         st.text_area("Output", value=ai_output, height=400)
