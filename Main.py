@@ -1,5 +1,4 @@
 import streamlit as st
-import os
 from openai import OpenAI
 
 # --- Streamlit App Config ---
@@ -9,9 +8,10 @@ st.markdown("Answer the following questions to generate a structured feedback no
 
 # --- OpenAI Client Setup ---
 def get_openai_client():
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        st.warning("Missing OpenAI API key. Set it in your Replit Secrets as 'OPENAI_API_KEY'.")
+    try:
+        api_key = st.secrets["OPENAI_API_KEY"]
+    except KeyError:
+        st.warning("Missing OpenAI API key. Please set it in Streamlit Secrets as 'OPENAI_API_KEY'.")
         return None
     return OpenAI(api_key=api_key)
 
@@ -35,28 +35,28 @@ if submitted:
         st.stop()
 
     event_summary = f"""
-    Rank: {rank}
-    Role: {role}
+Rank: {rank}
+Role: {role}
 
-    Task: {q1}
-    Problem/Context: {q2}
-    Actions Taken: {q3}
-    Stakeholders: {q4}
-    Outcome: {q5}
+Task: {q1}
+Problem/Context: {q2}
+Actions Taken: {q3}
+Stakeholders: {q4}
+Outcome: {q5}
 
-    Using the following structure and tone, generate a formal military-style feedback note starting with 3–5 competencies and ratings, followed by an Event Description and an Outcome section. Use the scoring format like:
+Using the following structure and tone, generate a formal military-style feedback note starting with 3–5 competencies and ratings, followed by an Event Description and an Outcome section. Use the scoring format like:
 
-    Event Description:
+Event Description:
 
-    Initiative (HE) – [short rationale]
-    Communication (E) – [short rationale]
+Initiative (HE) – [short rationale]
+Communication (E) – [short rationale]
 
-    Then write a 1–2 paragraph description of the event with the details provided above.
+Then write a 1–2 paragraph description of the event with the details provided above.
 
-    Outcome:
+Outcome:
 
-    Write a 2–3 sentence summary of the measurable or strategic benefit to the unit or organization.
-    """
+Write a 2–3 sentence summary of the measurable or strategic benefit to the unit or organization.
+"""
 
     try:
         response = client.chat.completions.create(
