@@ -79,8 +79,11 @@ Avoid referring to the member only by rank. Use the abbreviated rank format (e.g
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a military admin assistant trained to write professional performance feedback notes."
-                },
+                    ""content": (
+    "You are a military admin assistant trained to write professional performance feedback notes. "
+    "Always use abbreviated rank formats (e.g., MCpl, WO). Do not spell out full rank names like 'Master Corporal'. "
+    "When referring to the member, use the format 'Rank Lastname' for the first mention only, then use gender-neutral pronouns (they/them/their) exclusively."
+)
                 {
                     "role": "user",
                     "content": prompt
