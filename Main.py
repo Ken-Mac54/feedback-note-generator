@@ -53,13 +53,16 @@ focus_areas = st.multiselect(
 # --- Generate Feedback Note with OpenAI ---
 if submitted and client:
     try:
-        prompt = f"""
+        focus_string = ", ".join(focus_areas) if focus_areas else "None"
+
+prompt = f"""
 Rank: {rank}
 Last Name: {last_name}
 Event Description: {event_description}
 Who and What: {q1}
 Where and Why: {q2}
 How and Outcome: {q3}
+User-selected Competency Focus Areas: {focus_string}
 
 Using the input above, generate a formal military-style feedback note.
 
@@ -74,9 +77,12 @@ Outcome:
 [2–3 sentence measurable or strategic result.]
 
 Note:
+
 Use only the format "Core Competency: Sub-competency (Score) – rationale".
 
 If a competency is pulled from a higher rank, it must be labeled with that rank and scored no lower than HE (e.g. "(HE – Sgt Competency: [definition])").
+
+If the user has selected specific competencies, prioritize including them when reasonably justified by the event. If they are a stretch or not applicable, omit them.
 
 Avoid referring to the member only by rank. Use the abbreviated rank format (e.g., "MCpl") followed by the last name for the first mention (e.g., "MCpl Macpherson"), and then refer to them using they/them pronouns only. Do not spell out rank names like 'Master Corporal'.
 """
