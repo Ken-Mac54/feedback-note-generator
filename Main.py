@@ -80,9 +80,9 @@ Outcome:
 
 Note:
 
-Use only the format "Core Competency: Sub-competency (Score) – rationale".
+Use only the format "Competency: Facet (Score) – rationale".
 
-If a competency is pulled from a higher rank, it must be labeled with that rank and scored no lower than HE (e.g. "(HE – Sgt Competency: [definition])").
+If a competency is pulled from a higher rank, it must be labeled with that rank and scored no lower than HE (e.g. "(HE: [definition])").
 
 If the user has selected specific competencies, prioritize including them when reasonably justified by the event. If they are a stretch or not applicable, omit them.
 
