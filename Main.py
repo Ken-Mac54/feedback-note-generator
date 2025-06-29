@@ -139,7 +139,7 @@ Avoid referring to the member only by rank. Use the abbreviated rank format (e.g
         doc_buffer = create_word_doc(output_text)
 
         # --- Download Button ---
-st.download_button(
+    st.download_button(
     label="📄 Download as Word Document",
     data=doc_buffer,
     file_name="feedback_note.docx",
