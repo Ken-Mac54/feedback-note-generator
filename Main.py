@@ -40,16 +40,6 @@ with st.form("feedback_form"):
     q3 = st.text_area("How was it done and what was the outcome?",
                       placeholder="Highlight any notable processes, tools, or innovations used and the final result.")
 
-    # Optional: Select focus competencies
-    if competency_df is not None:
-        focus_areas = st.multiselect(
-            "Optional: Select 1–3 competencies to focus on (optional)",
-            options=sorted(competency_df['Competency'].dropna().unique()),
-            help="If selected, the AI will try to include these if they logically apply. It may omit them if not justified."
-        )
-    else:
-        focus_areas = []
-
     submitted = st.form_submit_button("Generate Feedback Note")
 
 # --- Generate Feedback Note with OpenAI ---
@@ -83,8 +73,6 @@ Note:
 Use only the format "Competency: Facet (Score) – rationale".
 
 If a competency is pulled from a higher rank, it must be labeled with that rank and scored no lower than HE (e.g. "(HE: [definition])").
-
-If the user has selected specific competencies, prioritize including them when reasonably justified by the event. If they are a stretch or not applicable, omit them.
 
 Avoid referring to the member only by rank. Use the abbreviated rank format (e.g., "MCpl") followed by the last name for the first mention (e.g., "MCpl Macpherson"), and then refer to them using they/them pronouns only. Do not spell out rank names like 'Master Corporal'.
 """
