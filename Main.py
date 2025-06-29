@@ -7,25 +7,25 @@ from docx.shared import Pt
 from docx.oxml.ns import qn 
 from io import BytesIO
 
---- Streamlit App Configuration ---
+#--- Streamlit App Configuration ---
 
 st.set_page_config(page_title="PAR Writing Assistant", layout="wide") st.title("📋 Feedback Note Generator") st.markdown("Answer the following questions to generate a structured feedback note.")
 
---- Load Excel Definitions ---
+#--- Load Excel Definitions ---
 
 try: excel_path = "PAR Writing Guide (1).xlsx" competency_df = pd.read_excel(excel_path, engine="openpyxl") st.success("Competency definitions loaded successfully.") except Exception as e: st.error(f"Error loading competency definitions: {e}") competency_df = None
 
---- Set up OpenAI Client ---
+#--- Set up OpenAI Client ---
 
 try: client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"]) except Exception as e: st.error(f"Failed to initialize OpenAI client: {e}") client = None
 
---- Feedback Form ---
+#--- Feedback Form ---
 
 with st.form("feedback_form"): rank = st.selectbox("Select rank level", ["Cpl", "MCpl", "Sgt", "WO"], index=1) last_name = st.text_input("Enter last name of the member")
 
 event_description = st.text_area("Event Description", placeholder="Brief summary of the event or project") q1 = st.text_area( "Who was involved and what was done?", placeholder="Describe who completed the task, who was impacted, and what actions were taken." ) q2 = st.text_area( "Where and why did this happen?", placeholder="Explain the location or context and the reason the task or project was necessary." ) q3 = st.text_area( "How was it done and what was the outcome?", placeholder="Highlight any notable processes, tools, or innovations used and the final result." ) submitted = st.form_submit_button("Generate Feedback Note") 
 
---- Generate Feedback Note with OpenAI ---
+#--- Generate Feedback Note with OpenAI ---
 
 if submitted and client: try: prompt = f""" Rank: {rank} Last Name: {last_name} Event Description: {event_description} Who and What: {q1} Where and Why: {q2} How and Outcome: {q3}
 
