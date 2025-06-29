@@ -45,8 +45,6 @@ with st.form("feedback_form"):
 # --- Generate Feedback Note with OpenAI ---
 if submitted and client:
     try:
-        focus_string = ", ".join(focus_areas) if focus_areas else "None"
-
         prompt = f"""
 Rank: {rank}
 Last Name: {last_name}
