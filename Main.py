@@ -136,9 +136,6 @@ Avoid referring to the member only by rank. Use the abbreviated rank format (e.g
             buffer.seek(0)
             return buffer
 
-        if submitted and client:
-    try:
-        # Your logic here...
         doc_buffer = create_word_doc(output_text)
 
         # --- Download Button ---
