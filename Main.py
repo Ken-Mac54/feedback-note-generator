@@ -106,8 +106,8 @@ Avoid referring to the member only by rank. Use the abbreviated rank format (e.g
         )
 
         output_text = response.choices[0].message.content
-st.markdown("### ✏️ Generated Feedback Note")
-st.text_area("Output", output_text, height=400)
+        st.markdown("### ✏️ Generated Feedback Note")
+        st.text_area("Output", output_text, height=400)
 
         # --- Create Word Document ---
         def create_word_doc(text):
@@ -121,7 +121,7 @@ st.text_area("Output", output_text, height=400)
                 elif line.lower().startswith("outcome"):
                     doc.add_paragraph("Outcome:", style='Heading 2')
                 elif not line.strip():
-                continue
+                                    continue
                 else:
                     para = doc.add_paragraph()
                     run = para.add_run(line)
