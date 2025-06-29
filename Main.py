@@ -67,23 +67,24 @@ Outcome:
 [2–3 sentence measurable or strategic result.]
 
 Note:
-
 Use only the format "Core Competency: Sub-competency (Score) – rationale".
 
 If a competency is pulled from a higher rank, it must be labeled with that rank and scored no lower than HE (e.g. "(HE – Sgt Competency: [definition])").
 
 Avoid referring to the member only by rank. Use the abbreviated rank format (e.g., "MCpl") followed by the last name for the first mention (e.g., "MCpl Macpherson"), and then refer to them using they/them pronouns only. Do not spell out rank names like 'Master Corporal'.
+"""
 
         response = client.chat.completions.create(
             model="gpt-4",
             messages=[
                 {
                     "role": "system",
-                    ""content": (
-    "You are a military admin assistant trained to write professional performance feedback notes. "
-    "Always use abbreviated rank formats (e.g., MCpl, WO). Do not spell out full rank names like 'Master Corporal'. "
-    "When referring to the member, use the format 'Rank Lastname' for the first mention only, then use gender-neutral pronouns (they/them/their) exclusively."
-)
+                    "content": (
+                        "You are a military admin assistant trained to write professional performance feedback notes. "
+                        "Always use abbreviated rank formats (e.g., MCpl, WO). Do not spell out full rank names like 'Master Corporal'. "
+                        "When referring to the member, use the format 'Rank Lastname' for the first mention only, then use gender-neutral pronouns (they/them/their) exclusively."
+                    )
+                },
                 {
                     "role": "user",
                     "content": prompt
