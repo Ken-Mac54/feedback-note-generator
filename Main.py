@@ -24,42 +24,50 @@ except Exception as e:
     st.error(f"Failed to initialize OpenAI client: {e}")
     client = None
 
-# Form for Input
+# Feedback Form
 with st.form("feedback_form"):
     rank = st.selectbox("Select rank level", ["Cpl", "MCpl", "Sgt", "WO"], index=1)
 
-    event_description = st.text_area("Event Description", placeholder="Brief summary of the event")
-    q_who = st.text_area("Who was this task completed for? Who did it affect?")
-    q_what = st.text_area("What was done and what was the impact?")
-    q_where = st.text_area("Where was this completed?")
-    q_why = st.text_area("Why was this needed?")
-    q_how = st.text_area("How was the task completed? Include any specific actions or processes.")
-    q_outcome = st.text_area("What was the result or outcome of the work?")
+    event_description = st.text_area("Event Description", placeholder="Brief summary of the event or project")
+    
+    q1 = st.text_area(
+        "Who was involved and what was done?",
+        placeholder="Describe who completed the task, who was impacted, and what actions were taken."
+    )
+    q2 = st.text_area(
+        "Where and why did this happen?",
+        placeholder="Explain the location or context and the reason the task or project was necessary."
+    )
+    q3 = st.text_area(
+        "How was it done and what was the outcome?",
+        placeholder="Highlight any notable processes, tools, or innovations used and the final result."
+    )
 
     submitted = st.form_submit_button("Generate Feedback Note")
 
-# Build Prompt and Generate Feedback Note
+# Generate Feedback Note with OpenAI
 if submitted and client:
     try:
-        full_input = f"""
+        prompt = f"""
 Rank: {rank}
 Event Description: {event_description}
-Who: {q_who}
-What: {q_what}
-Where: {q_where}
-Why: {q_why}
-How: {q_how}
-Outcome: {q_outcome}
+Who and What: {q1}
+Where and Why: {q2}
+How and Outcome: {q3}
 
-Using the input above, generate a military-style feedback note. Begin with 3–5 competencies with performance ratings (E, HE, etc.). Use the following format:
+Using the input above, generate a formal military-style feedback note.
+
+Start with 3–5 competencies with performance ratings (E, HE, etc.). Use the following format:
 
 Event Description:
 Competency Name (Score) – short rationale
 ...
-[1-2 paragraph description]
+[1–2 paragraph description]
 
 Outcome:
-[2-3 sentence measurable or strategic result]
+[2–3 sentence measurable or strategic result]
+
+Note: Competencies pulled from one rank higher should be labelled (e.g. “Innovation (HE – Sgt Competency: [definition])”). All ratings should be E or higher unless otherwise noted.
 """
 
         response = client.chat.completions.create(
@@ -71,7 +79,7 @@ Outcome:
                 },
                 {
                     "role": "user",
-                    "content": full_input
+                    "content": prompt
                 }
             ]
         )
