@@ -138,13 +138,10 @@ Avoid referring to the member only by rank. Use the abbreviated rank format (e.g
 
         doc_buffer = create_word_doc(output_text)
 
-        # --- Download Button ---
-    st.download_button(
-    label="📄 Download as Word Document",
-    data=doc_buffer,
-    file_name="feedback_note.docx",
-    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-)
-
-    except Exception as e:
-        st.error(f"Failed to generate feedback note: {e}")
+      # --- Download Button ---
+        st.download_button(
+            label="📄 Download as Word Document",
+            data=doc_buffer,
+            file_name="feedback_note.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
