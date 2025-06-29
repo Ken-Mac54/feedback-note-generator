@@ -48,21 +48,21 @@ focus_areas = st.multiselect(
     help="If selected, the AI will try to include these if they logically apply. It may omit them if not justified."
 )
 
-    submitted = st.form_submit_button("Generate Feedback Note")
+submitted = st.form_submit_button("Generate Feedback Note")
 
 # --- Generate Feedback Note with OpenAI ---
 if submitted and client:
     try:
         focus_string = ", ".join(focus_areas) if focus_areas else "None"
 
-prompt = f"""
-Rank: {rank}
-Last Name: {last_name}
-Event Description: {event_description}
-Who and What: {q1}
-Where and Why: {q2}
-How and Outcome: {q3}
-User-selected Competency Focus Areas: {focus_string}
+        prompt = f"""
+        Rank: {rank}
+        Last Name: {last_name}
+        Event Description: {event_description}
+        Who and What: {q1}
+        Where and Why: {q2}
+        How and Outcome: {q3}
+        User-selected Competency Focus Areas:          {focus_string}
 
 Using the input above, generate a formal military-style feedback note.
 
