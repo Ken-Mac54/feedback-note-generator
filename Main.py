@@ -124,7 +124,7 @@ Avoid referring to the member only by rank. Use the abbreviated rank format (e.g
                 elif line.lower().startswith("outcome"):
                     doc.add_paragraph("Outcome:", style='Heading 2')
                 elif not line.strip():
-                                    continue
+                    doc.add_paragraph("")
                 else:
                     para = doc.add_paragraph()
                     run = para.add_run(line)
