@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import openai
-import os
 from docx import Document
 from docx.shared import Pt
 from docx.oxml.ns import qn
@@ -41,17 +40,17 @@ with st.form("feedback_form"):
     q3 = st.text_area("How was it done and what was the outcome?",
                       placeholder="Highlight any notable processes, tools, or innovations used and the final result.")
 
-# Optional: Select focus competencies
-if competency_df is not None:
-    focus_areas = st.multiselect(
-        "Optional: Select 1–3 competencies to focus on (optional)",
-        options=sorted(competency_df['Competency'].dropna().unique()),
-        help="If selected, the AI will try to include these if they logically apply. It may omit them if not justified."
-    )
-else:
-    focus_areas = []
+    # Optional: Select focus competencies
+    if competency_df is not None:
+        focus_areas = st.multiselect(
+            "Optional: Select 1–3 competencies to focus on (optional)",
+            options=sorted(competency_df['Core Competency'].dropna().unique()),
+            help="If selected, the AI will try to include these if they logically apply. It may omit them if not justified."
+        )
+    else:
+        focus_areas = []
 
-submitted = st.form_submit_button("Generate Feedback Note")
+    submitted = st.form_submit_button("Generate Feedback Note")
 
 # --- Generate Feedback Note with OpenAI ---
 if submitted and client:
