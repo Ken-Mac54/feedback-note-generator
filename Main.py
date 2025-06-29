@@ -1,4 +1,11 @@
-import streamlit as st import pandas as pd import openai import os from docx import Document from docx.shared import Pt from docx.oxml.ns import qn from io import BytesIO
+import streamlit as st
+import pandas as pd
+import openai
+import os
+from docx import Document
+from docx.shared import Pt
+from docx.oxml.ns import qn
+from io import BytesIO
 
 Streamlit App Configuration
 
