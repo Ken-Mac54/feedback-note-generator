@@ -67,9 +67,9 @@ if submitted and client:
         How and Outcome: {q3}
         User-selected Competency Focus Areas:          {focus_string}
 
-Using the input above, generate a formal military-style feedback note.
+        Using the input above, generate a formal       military-style feedback note.
 
-Start with 3–5 competencies and sub-competencies with performance ratings (E, HE, etc.). Use the following format:
+        Start with 3–5 competencies and  sub-competencies with performance ratings (E, HE,   etc.). Use the following format:
 
 Event Description:
 Communication: Written Communication (HE) – [short rationale]
