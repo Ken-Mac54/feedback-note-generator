@@ -41,6 +41,13 @@ with st.form("feedback_form"):
     q3 = st.text_area("How was it done and what was the outcome?",
                       placeholder="Highlight any notable processes, tools, or innovations used and the final result.")
 
+# Optional: Select focus competencies
+focus_areas = st.multiselect(
+    "Optional: Select 1–3 competencies to focus on (optional)",
+    options=sorted(competency_df['Core Competency'].dropna().unique()),
+    help="If selected, the AI will try to include these if they logically apply. It may omit them if not justified."
+)
+
     submitted = st.form_submit_button("Generate Feedback Note")
 
 # --- Generate Feedback Note with OpenAI ---
