@@ -9,7 +9,8 @@ from io import BytesIO
 
 #--- Streamlit App Configuration ---
 
-st.set_page_config(page_title="PAR Writing Assistant", layout="wide") st.title("📋 Feedback Note Generator") st.markdown("Answer the following questions to generate a structured feedback note.")
+st.set_page_config(page_title="PAR Writing Assistant", layout="wide") 
+st.title("📋 Feedback Note Generator") st.markdown("Answer the following questions to generate a structured feedback note.")
 
 #--- Load Excel Definitions ---
 
