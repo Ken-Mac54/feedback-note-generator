@@ -54,7 +54,6 @@ Event Description: {event_description}
 Who and What: {q1}
 Where and Why: {q2}
 How and Outcome: {q3}
-User-selected Competency Focus Areas: {focus_string}
 
 Using the input above, generate a formal military-style feedback note.
 
