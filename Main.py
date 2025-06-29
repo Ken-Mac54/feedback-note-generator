@@ -59,17 +59,17 @@ if submitted and client:
         focus_string = ", ".join(focus_areas) if focus_areas else "None"
 
         prompt = f"""
-        Rank: {rank}
-        Last Name: {last_name}
-        Event Description: {event_description}
-        Who and What: {q1}
-        Where and Why: {q2}
-        How and Outcome: {q3}
-        User-selected Competency Focus Areas:          {focus_string}
+Rank: {rank}
+Last Name: {last_name}
+Event Description: {event_description}
+Who and What: {q1}
+Where and Why: {q2}
+How and Outcome: {q3}
+User-selected Competency Focus Areas: {focus_string}
 
-        Using the input above, generate a formal       military-style feedback note.
+Using the input above, generate a formal military-style feedback note.
 
-        Start with 3–5 competencies and  sub-competencies with performance ratings (E, HE,   etc.). Use the following format:
+Start with 3–5 competencies and sub-competencies with performance ratings (E, HE, etc.). Use the following format:
 
 Event Description:
 Communication: Written Communication (HE) – [short rationale]
@@ -113,7 +113,7 @@ Avoid referring to the member only by rank. Use the abbreviated rank format (e.g
         st.text_area("Output", output_text, height=400)
 
         # --- Create Word Document ---
-        def create_word_doc(text):
+def create_word_doc(text):
     doc = Document()
     doc.add_heading("Performance Feedback Note", 0)
     lines = text.strip().splitlines()
@@ -123,7 +123,7 @@ Avoid referring to the member only by rank. Use the abbreviated rank format (e.g
             doc.add_paragraph("Event Description:", style='Heading 2')
         elif line.lower().startswith("outcome"):
             doc.add_paragraph("Outcome:", style='Heading 2')
-        elif not line.strip():
+        elif not line:
             doc.add_paragraph("")
         else:
             para = doc.add_paragraph()
