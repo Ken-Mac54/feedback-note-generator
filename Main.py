@@ -114,27 +114,27 @@ Avoid referring to the member only by rank. Use the abbreviated rank format (e.g
 
         # --- Create Word Document ---
         def create_word_doc(text):
-            doc = Document()
-            doc.add_heading("Performance Feedback Note", 0)
-            lines = text.strip().splitlines()
-            for line in lines:
-                line = line.strip()
-                if line.lower().startswith("event description"):
-                    doc.add_paragraph("Event Description:", style='Heading 2')
-                elif line.lower().startswith("outcome"):
-                    doc.add_paragraph("Outcome:", style='Heading 2')
-                elif not line.strip():
-                    doc.add_paragraph("")
-                else:
-                    para = doc.add_paragraph()
-                    run = para.add_run(line)
-                    run.font.name = 'Arial'
-                    run._element.rPr.rFonts.set(qn('w:eastAsia'), 'Arial')
-                    run.font.size = Pt(11)
-            buffer = BytesIO()
-            doc.save(buffer)
-            buffer.seek(0)
-            return buffer
+    doc = Document()
+    doc.add_heading("Performance Feedback Note", 0)
+    lines = text.strip().splitlines()
+    for line in lines:
+        line = line.strip()
+        if line.lower().startswith("event description"):
+            doc.add_paragraph("Event Description:", style='Heading 2')
+        elif line.lower().startswith("outcome"):
+            doc.add_paragraph("Outcome:", style='Heading 2')
+        elif not line.strip():
+            doc.add_paragraph("")
+        else:
+            para = doc.add_paragraph()
+            run = para.add_run(line)
+            run.font.name = 'Arial'
+            run._element.rPr.rFonts.set(qn('w:eastAsia'), 'Arial')
+            run.font.size = Pt(11)
+    buffer = BytesIO()
+    doc.save(buffer)
+    buffer.seek(0)
+    return buffer
 
         doc_buffer = create_word_doc(output_text)
 
