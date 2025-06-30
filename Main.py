@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 PAR Feedback Note Generator
 Author: Ken Macpherson
@@ -19,7 +18,7 @@ from io import BytesIO
 
 # --- Streamlit App Configuration ---
 st.set_page_config(page_title="PAR Writing Assistant", layout="wide")
-st.title("\ud83d\udccb Feedback Note Generator")
+st.title("Feedback Note Generator")
 st.markdown("Answer the following questions to generate a structured feedback note.")
 
 # --- Feedback Form ---
@@ -117,7 +116,7 @@ Strict Instructions:
         )
 
         output_text = response.choices[0].message.content
-        st.markdown("### \u270d\ufe0f Generated Feedback Note")
+        st.markdown("### Generated Feedback Note")
         st.text_area("Output", output_text, height=400)
 
         # --- Create Word Document ---
@@ -148,7 +147,7 @@ Strict Instructions:
 
         # --- Download Button ---
         st.download_button(
-            label="\ud83d\udcc4 Download as Word Document",
+            label="Download as Word Document",
             data=doc_buffer,
             file_name="feedback_note.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
