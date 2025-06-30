@@ -62,32 +62,28 @@ Who and What: {q1}
 Where and Why: {q2}
 How and Outcome: {q3}
 
-Using the input above, generate a formal military-style feedback note.
-
 Use only valid competency:facet pairs from the list below. Do not invent new combinations or use competencies from other ranks:
 
 {valid_pairs_text}
 
-Use one of the following performance ratings: {scoring_guide}
-Default to using E or HE unless the content clearly supports a higher or lower score (IE, PE, or EE).
+Scoring Guide: Ineffective (IE), Partially Effective (PE), Effective (E), Highly Effective (HE), Extremely Effective (EE)
+Default to using E or HE unless the user's input clearly supports a higher or lower score.
 
 Format:
-
 Event Description:
-Competency: Facet (Performance Rating) – rationale
+Competency: Facet (Rating) – rationale
 ...
-[Follow with 1–2 paragraph description using the member's rank and last name on first mention, then they/them pronouns thereafter.]
+[1–2 paragraph description using the member's rank and last name on first mention, then use they/them pronouns.]
 
 Outcome:
 [2–3 sentence measurable or strategic result.]
 
-Instructions:
-
+Strict Instructions:
 - Use only the format "Competency: Facet (Rating) – rationale".
-- Use only competency:facet pairs from the rank sheet provided.
-- Use only scoring terms from the Performance Rating tab: IE, PE, E, HE, EE.
-- Avoid using full rank names (e.g., 'Master Corporal'). Use abbreviated format like 'MCpl Bloggins'.
-- Use they/them pronouns for all subsequent references.
+- Do not repeat competency names or use nested labels like "Competency: Competency (Facet)".
+- Use only scoring labels from the guide above.
+- Avoid spelling out ranks; always use abbreviated (e.g., MCpl).
+- Refer to the member as Rank Lastname on first mention, then they/them/their.
 """
 
     try:
