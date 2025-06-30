@@ -46,9 +46,12 @@ if submitted:
     if competency_df.empty:
         st.stop()
 
-    # Generate all valid competency:facets pairs
+    # Generate all valid competency:facet pairs
     valid_pairs = [f"{row['Competency'].strip()}: {row['Facets'].strip()}" for _, row in competency_df.iterrows()]
     valid_pairs_text = "; ".join(valid_pairs)
+
+    # Define scoring expectations
+    scoring_guide = "Ineffective (IE), Partially Effective (PE), Effective (E), Highly Effective (HE), Extremely Effective (EE)"
 
     # Build the prompt for OpenAI
     prompt = f"""
@@ -61,24 +64,30 @@ How and Outcome: {q3}
 
 Using the input above, generate a formal military-style feedback note.
 
-Start with 3–5 valid competencies and facets from the list below. Use only the following format for each:
+Use only valid competency:facet pairs from the list below. Do not invent new combinations or use competencies from other ranks:
 
-Competency: Facet (Score) – rationale
-
-Only use valid competency:facet pairs from this list:
 {valid_pairs_text}
 
-Do not invent new combinations. Do not use competencies from other ranks. Avoid generic phrasing like 'Leadership' without a facet.
+Use one of the following performance ratings: {scoring_guide}
+Default to using E, HE, or EE unless the content clearly supports a lower score (IE or PE).
 
-Structure:
+Format:
+
 Event Description:
-[3–5 competency/facet lines formatted as above]
-[1–2 paragraph description using the member's rank and last name on first mention, then only they/them/their pronouns thereafter.]
+Competency: Facet (Performance Rating) – rationale
+...
+[Follow with 1–2 paragraph description using the member's rank and last name on first mention, then they/them pronouns thereafter.]
 
 Outcome:
 [2–3 sentence measurable or strategic result.]
 
-Use abbreviated rank format (e.g., MCpl Macpherson), and do not spell out ranks. Use they/them pronouns consistently after the first mention.
+Instructions:
+
+- Use only the format "Competency: Facet (Rating) – rationale".
+- Use only competency:facet pairs from the rank sheet provided.
+- Use only scoring terms from the Performance Rating tab: IE, PE, E, HE, EE.
+- Avoid using full rank names (e.g., 'Master Corporal'). Use abbreviated format like 'MCpl Macpherson'.
+- Use they/them pronouns for all subsequent references.
 """
 
     try:
@@ -92,7 +101,8 @@ Use abbreviated rank format (e.g., MCpl Macpherson), and do not spell out ranks.
                     "content": (
                         "You are a military admin assistant trained to write professional performance feedback notes. "
                         "Always use abbreviated rank formats (e.g., MCpl, WO). Do not spell out full rank names. "
-                        "Use the format 'Rank Lastname' on first mention, then use they/them pronouns."
+                        "Use the format 'Rank Lastname' on first mention, then use they/them pronouns. "
+                        "Use only competency:facet pairs from the list provided by the user."
                     )
                 },
                 {"role": "user", "content": prompt}
