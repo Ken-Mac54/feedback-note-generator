@@ -11,22 +11,6 @@ st.set_page_config(page_title="PAR Writing Assistant", layout="wide")
 st.title("📋 Feedback Note Generator")
 st.markdown("Answer the following questions to generate a structured feedback note.")
 
-# --- Load Excel Definitions ---
-try:
-    excel_path = "PAR Writing Guide (1).xlsx"
-    competency_df = pd.read_excel(excel_path, engine="openpyxl")
-    st.success("Competency definitions loaded successfully.")
-except Exception as e:
-    st.error(f"Error loading competency definitions: {e}")
-    competency_df = None
-
-# --- Set up OpenAI Client ---
-try:
-    client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-except Exception as e:
-    st.error(f"Failed to initialize OpenAI client: {e}")
-    client = None
-
 # --- Feedback Form ---
 with st.form("feedback_form"):
     rank = st.selectbox("Select rank level", ["Cpl", "MCpl", "Sgt", "WO"], index=1)
@@ -42,10 +26,32 @@ with st.form("feedback_form"):
 
     submitted = st.form_submit_button("Generate Feedback Note")
 
-# --- Generate Feedback Note with OpenAI ---
-if submitted and client:
+# --- Load Competencies from Excel based on selected rank ---
+def load_rank_competencies(selected_rank):
     try:
-        prompt = f"""
+        df = pd.read_excel("PAR Writing Guide (1).xlsx", sheet_name=selected_rank, engine="openpyxl")
+        if 'Competency' in df.columns and 'Facet' in df.columns:
+            return df[['Competency', 'Facet']].dropna()
+        else:
+            st.error(f"The sheet for {selected_rank} does not contain the expected columns.")
+            return pd.DataFrame()
+    except Exception as e:
+        st.error(f"Error loading competencies for {selected_rank}: {e}")
+        return pd.DataFrame()
+
+# --- Generate Feedback Note ---
+if submitted:
+    competency_df = load_rank_competencies(rank)
+
+    if competency_df.empty:
+        st.stop()
+
+    # Generate all valid competency:facet pairs
+    valid_pairs = [f"{row['Competency'].strip()}: {row['Facet'].strip()}" for _, row in competency_df.iterrows()]
+    valid_pairs_text = "; ".join(valid_pairs)
+
+    # Build the prompt for OpenAI
+    prompt = f"""
 Rank: {rank}
 Last Name: {last_name}
 Event Description: {event_description}
@@ -55,24 +61,28 @@ How and Outcome: {q3}
 
 Using the input above, generate a formal military-style feedback note.
 
-Start with 3–5 competencies and sub-competencies with performance ratings (E, HE, etc.). Use the following format:
+Start with 3–5 valid competencies and facets from the list below. Use only the following format for each:
 
+Competency: Facet (Score) – rationale
+
+Only use valid competency:facet pairs from this list:
+{valid_pairs_text}
+
+Do not invent new combinations. Do not use competencies from other ranks. Avoid generic phrasing like 'Leadership' without a facet.
+
+Structure:
 Event Description:
-Communication: Written Communication (HE) – [short rationale]
-...
+[3–5 competency/facet lines formatted as above]
 [1–2 paragraph description using the member's rank and last name on first mention, then only they/them/their pronouns thereafter.]
 
 Outcome:
 [2–3 sentence measurable or strategic result.]
 
-Note:
-
-Use only the format "Competency: Facet (Score) – rationale".
-
-If a competency is pulled from a higher rank, it must be labeled with that rank and scored no lower than HE (e.g. "(HE: [definition])").
-
-Avoid referring to the member only by rank. Use the abbreviated rank format (e.g., "MCpl") followed by the last name for the first mention (e.g., "MCpl Macpherson"), and then refer to them using they/them pronouns only. Do not spell out rank names like 'Master Corporal'.
+Use abbreviated rank format (e.g., MCpl Macpherson), and do not spell out ranks. Use they/them pronouns consistently after the first mention.
 """
+
+    try:
+        client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
         response = client.chat.completions.create(
             model="gpt-4",
@@ -81,14 +91,11 @@ Avoid referring to the member only by rank. Use the abbreviated rank format (e.g
                     "role": "system",
                     "content": (
                         "You are a military admin assistant trained to write professional performance feedback notes. "
-                        "Always use abbreviated rank formats (e.g., MCpl, WO). Do not spell out full rank names like 'Master Corporal'. "
-                        "When referring to the member, use the format 'Rank Lastname' for the first mention only, then use gender-neutral pronouns (they/them/their) exclusively."
+                        "Always use abbreviated rank formats (e.g., MCpl, WO). Do not spell out full rank names. "
+                        "Use the format 'Rank Lastname' on first mention, then use they/them pronouns."
                     )
                 },
-                {
-                    "role": "user",
-                    "content": prompt
-                }
+                {"role": "user", "content": prompt}
             ]
         )
 
