@@ -86,7 +86,7 @@ Instructions:
 - Use only the format "Competency: Facet (Rating) – rationale".
 - Use only competency:facet pairs from the rank sheet provided.
 - Use only scoring terms from the Performance Rating tab: IE, PE, E, HE, EE.
-- Avoid using full rank names (e.g., 'Master Corporal'). Use abbreviated format like 'MCpl Macpherson'.
+- Avoid using full rank names (e.g., 'Master Corporal'). Use abbreviated format like 'MCpl Bloggins'.
 - Use they/them pronouns for all subsequent references.
 """
 
