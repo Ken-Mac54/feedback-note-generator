@@ -69,7 +69,7 @@ Use only valid competency:facet pairs from the list below. Do not invent new com
 {valid_pairs_text}
 
 Use one of the following performance ratings: {scoring_guide}
-Default to using E, HE, or EE unless the content clearly supports a lower score (IE or PE).
+Default to using E or HE unless the content clearly supports a higher or lower score (IE, PE, or EE).
 
 Format:
 
