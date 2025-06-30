@@ -1,3 +1,13 @@
+"""
+PAR Feedback Note Generator
+Author: Ken Macpherson
+Last Updated: 2025-06-26
+Description:
+Generates professional military feedback notes based on structured input and AI analysis.
+It pulls valid competency:facet pairs from an Excel sheet by rank, enforces correct format,
+and allows Word document export.
+"""
+
 import streamlit as st
 import pandas as pd
 import openai
@@ -8,7 +18,7 @@ from io import BytesIO
 
 # --- Streamlit App Configuration ---
 st.set_page_config(page_title="PAR Writing Assistant", layout="wide")
-st.title("📋 Feedback Note Generator")
+st.title("\ud83d\udccb Feedback Note Generator")
 st.markdown("Answer the following questions to generate a structured feedback note.")
 
 # --- Feedback Form ---
@@ -66,7 +76,7 @@ Use only valid competency:facet pairs from the list below. Do not invent new com
 
 {valid_pairs_text}
 
-Scoring Guide: Ineffective (IE), Partially Effective (PE), Effective (E), Highly Effective (HE), Extremely Effective (EE)
+Scoring Guide: {scoring_guide}
 Default to using E or HE unless the user's input clearly supports a higher or lower score.
 
 Format:
@@ -106,7 +116,7 @@ Strict Instructions:
         )
 
         output_text = response.choices[0].message.content
-        st.markdown("### ✏️ Generated Feedback Note")
+        st.markdown("### \u270d\ufe0f Generated Feedback Note")
         st.text_area("Output", output_text, height=400)
 
         # --- Create Word Document ---
@@ -137,7 +147,7 @@ Strict Instructions:
 
         # --- Download Button ---
         st.download_button(
-            label="📄 Download as Word Document",
+            label="\ud83d\udcc4 Download as Word Document",
             data=doc_buffer,
             file_name="feedback_note.docx",
             mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
