@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 PAR Feedback Note Generator
 Author: Ken Macpherson
