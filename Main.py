@@ -30,8 +30,8 @@ with st.form("feedback_form"):
 def load_rank_competencies(selected_rank):
     try:
         df = pd.read_excel("PAR Writing Guide (1).xlsx", sheet_name=selected_rank, engine="openpyxl")
-        if 'Competency' in df.columns and 'Facet' in df.columns:
-            return df[['Competency', 'Facet']].dropna()
+        if 'Competency' in df.columns and 'Facets' in df.columns:
+            return df[['Competency', 'Facets']].dropna()
         else:
             st.error(f"The sheet for {selected_rank} does not contain the expected columns.")
             return pd.DataFrame()
@@ -46,7 +46,7 @@ if submitted:
     if competency_df.empty:
         st.stop()
 
-    # Generate all valid competency:facet pairs
+    # Generate all valid competency:facets pairs
     valid_pairs = [f"{row['Competency'].strip()}: {row['Facet'].strip()}" for _, row in competency_df.iterrows()]
     valid_pairs_text = "; ".join(valid_pairs)
 
