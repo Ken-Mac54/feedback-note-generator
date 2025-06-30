@@ -47,7 +47,7 @@ if submitted:
         st.stop()
 
     # Generate all valid competency:facets pairs
-    valid_pairs = [f"{row['Competency'].strip()}: {row['Facet'].strip()}" for _, row in competency_df.iterrows()]
+    valid_pairs = [f"{row['Competency'].strip()}: {row['Facets'].strip()}" for _, row in competency_df.iterrows()]
     valid_pairs_text = "; ".join(valid_pairs)
 
     # Build the prompt for OpenAI
